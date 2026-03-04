@@ -1,48 +1,55 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { SignedIn, SignedOut, UserButton } from "@clerk/react-router";
+import { UserButton } from "@clerk/react-router";
 import LanguageButton from "./LanguageButton";
 import { useLanguage } from "../Context/LanguageContext";
 
-const base = "rounded-xl px-3 py-2 text-sm hover:bg-black/5";
-const active = "bg-black/10";
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+    children?: React.ReactNode;
+}
+
+const baseLink = "relative z-10 flex items-center justify-center rounded-2xl px-4 py-4 text-sm font-bold transition-all duration-300 border border-white/10 active:scale-95 select-none";
+const activeLink = "bg-white text-blue-900 shadow-xl border-white scale-105";
+const inactiveLink = "bg-white/5 text-white hover:bg-white/15 backdrop-blur-md";
+
+const Navbar: React.FC<NavbarProps> = ({ children }) => {
     const { t } = useLanguage();
 
     return (
-        <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur">
-            <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 p-3">
-                <div className="flex items-center gap-2">
-                    <div className="text-sm font-semibold">{t("appName")}</div>
-                    <nav className="hidden gap-1 sm:flex">
-                        <NavLink to="/" className={({ isActive }) => `${base} ${isActive ? active : ""}`}>
-                            {t("home")}
-                        </NavLink>
-                        <NavLink to="/health" className={({ isActive }) => `${base} ${isActive ? active : ""}`}>
-                            {t("health")}
-                        </NavLink>
-                        <NavLink to="/quiz" className={({ isActive }) => `${base} ${isActive ? active : ""}`}>
-                            {t("quiz")}
-                        </NavLink>
-                    </nav>
+        <nav className="relative flex flex-col h-[700px] w-full max-w-sm mx-auto p-3 bg-[#0a192f] rounded-[3rem] shadow-2xl border border-white/5 overflow-hidden">
+
+            <div className="flex justify-between items-start w-full mb-4">
+                <div className="flex flex-col">
+                    <span className="text-[10px] uppercase tracking-widest text-blue-400 font-bold opacity-70">Health Assistant</span>
+                    <h1 className="text-xl font-black text-white italic">{t("appName")}</h1>
                 </div>
+                <LanguageButton />
+            </div>
 
-                <div className="flex items-center gap-2">
-                    <LanguageButton />
 
-                    <SignedOut>
-                        <NavLink to="/sign-in" className="rounded-xl border px-3 py-2 text-sm">
-                            {t("login")}
-                        </NavLink>
-                    </SignedOut>
+            <div className="flex-1 overflow-y-auto px-1 py-1 custom-scrollbar relative z-20">
+                {children}
+            </div>
 
-                    <SignedIn>
-                        <UserButton />
-                    </SignedIn>
+
+            <div className="flex flex-col gap-3 mt-4 w-full border-t border-white/10 pt-4">
+                <div className="grid grid-cols-2 gap-3">
+                    <NavLink to="/" className={({ isActive }) => `${baseLink} ${isActive ? activeLink : inactiveLink}`}>
+                        {t("home")}
+                    </NavLink>
+                    <NavLink to="/assessment" className={({ isActive }) => `${baseLink} ${isActive ? activeLink : inactiveLink}`}>
+                        {t("assessment")}
+                    </NavLink>
+                </div>
+                <NavLink to="/health/" className={({ isActive }) => `${baseLink} ${isActive ? activeLink : inactiveLink} w-full`}>
+                    {t("health")}
+                </NavLink>
+                <div className="flex justify-center pt-2">
+                    <UserButton afterSignOutUrl="/" />
                 </div>
             </div>
-        </header>
+        </nav>
     );
 };
 

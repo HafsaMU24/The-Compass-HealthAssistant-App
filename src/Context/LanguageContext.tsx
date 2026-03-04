@@ -4,34 +4,30 @@ import { SettingsService } from "../Services/SettingsService";
 
 const dict: I18nDict = {
     sv: {
-        appName: "Hälsassistent",
+        appName: "The Compass",
         home: "Hem",
         health: "Hälsa",
-        quiz: "Quiz",
+        assessment: "Testa symtom",
         login: "Logga in",
         logout: "Logga ut",
-        welcome: "Välkommen",
         startQuiz: "Starta quiz",
         readAloud: "Lyssna",
         stopReading: "Stoppa",
         language: "Språk",
-        healthInfoTitle: "Hälsoinformation",
-        healthInfoDesc: "Grundläggande information om vård och hälsa i Sverige.",
+        healthInfoDesc: "Välkommen till din hälso assistant.",
     },
     ar: {
         appName: "مساعد الصحة",
         home: "الرئيسية",
         health: "الصحة",
-        quiz: "اختبار",
+        assessment: "فحص الاعراض",
         login: "تسجيل الدخول",
         logout: "تسجيل الخروج",
-        welcome: "مرحباً",
         startQuiz: "ابدأ الاختبار",
         readAloud: "استمع",
         stopReading: "إيقاف",
         language: "اللغة",
-        healthInfoTitle: "معلومات صحية",
-        healthInfoDesc: "معلومات أساسية حول الرعاية الصحية في السويد.",
+        healthInfoDesc: "مرحبا بك في مساعدك الصحي",
     },
 };
 
@@ -60,13 +56,26 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setLangState(l);
     };
 
-    const t = (key: I18nKey) => dict[lang][key];
 
-    return <LanguageContext.Provider value={{ lang, dir, t, setLang }}>{children}</LanguageContext.Provider>;
+    const t = (key: I18nKey) => {
+        return dict[lang][key] || key;
+    };
+
+    return (
+        <LanguageContext.Provider value={{ lang, dir, t, setLang }}>
+            {children}
+        </LanguageContext.Provider>
+    );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useLanguage() {
     const ctx = React.useContext(LanguageContext);
-    if (!ctx) throw new Error("useLanguage måste användas inom LanguageProvider");
+
+
+    if (!ctx) {
+        throw new Error("useLanguage must be used within a LanguageProvider");
+    }
+
     return ctx;
 }

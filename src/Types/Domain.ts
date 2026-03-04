@@ -30,6 +30,20 @@ export type QuizQuestion = {
     options: QuizOption[];
 };
 
+export type Medication = {
+    id: string;
+    name: string;
+    dosage: string;
+    time: string;
+};
+
+export type ContactPerson = {
+    id: string;
+    name: string;
+    role: "Doctor" | "Caregiver" | "Nurse";
+    phone: string;
+};
+
 export type DemoUser = {
     id: Brand<string, "UserId">;
     email: string;

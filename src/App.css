@@ -1,1 +1,34 @@
 @import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+@layer components {
+    .app {
+        @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+        w-full max-w-[900px] rounded-[10px] p-[10px];
+        box-shadow: rgba(15, 126, 238, 0.2) 0 8px 24px;
+    }
+
+    .header {
+        @apply flex justify-center rounded-[10px] border-2 border-red-500
+        bg-[#2c2c2c] p-[10px] font-sans text-white;
+    }
+
+    .btn {
+        @apply cursor-pointer rounded-[5px] bg-transparent p-[5px] hover:bg-[#ddd];
+    }
+
+    .editBin > button {
+        @apply text-blue-600;
+    }
+}

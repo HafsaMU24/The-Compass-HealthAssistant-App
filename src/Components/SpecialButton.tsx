@@ -2,15 +2,23 @@ import React from "react";
 import { useLanguage } from "../Context/LanguageContext";
 
 const SpecialButton: React.FC = () => {
+
     const { lang } = useLanguage();
 
     return (
-        <div className="flex gap-2">
-            <a className="rounded-xl bg-black px-3 py-2 text-sm text-white" href="tel:112">
-                {lang === "sv" ? "Ring 112" : "اتصل 112"}
+        <div className="grid grid-cols-2 gap-2 w-full">
+            <a
+                className="flex items-center justify-center rounded-xl bg-red-600 py-4 text-lg font-black text-white shadow-lg active:scale-95 transition-all hover:bg-red-700"
+                href="tel:112"
+            >
+
+                {lang === "sv" ? "RING 112" : "اتصل ١١٢"}
             </a>
-            <a className="rounded-xl border px-3 py-2 text-sm" href="tel:1177">
-                {lang === "sv" ? "Ring 1177" : "اتصل 1177"}
+            <a
+                className="flex items-center justify-center rounded-xl bg-blue-600 py-4 text-lg font-black text-white shadow-lg active:scale-95 transition-all hover:bg-blue-600"
+                href="tel:1177"
+            >
+                {lang === "sv" ? "RING 1177" : "اتصل ١١٧٧"}
             </a>
         </div>
     );

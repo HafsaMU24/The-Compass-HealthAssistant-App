@@ -1,7 +1,7 @@
 import type { HealthTopic, TopicSlug } from "../Types/Domain";
 
-const slug = (s: string) => s as TopicSlug;
 
+const slug = (s: string) => s as TopicSlug;
 const HEALTH_TOPICS: HealthTopic[] = [
     {
         slug: slug("112-1177"),
