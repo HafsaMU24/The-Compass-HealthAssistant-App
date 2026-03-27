@@ -1,14 +1,16 @@
-import { useLanguage } from "../Context/LanguageContext";
-import type { I18nKey } from "../Types/I18n";
 
-function useI18nText() {
-    const { t } = useLanguage();
+import {useLanguage} from "../Context/LanguageContext";
+import type { I18nKey} from "../Types/I18n";
 
-    function getText(key: I18nKey): string {
+
+export const useI18nText = () => {
+    const { t, lang, dir } = useLanguage();
+
+    const getText = (key: I18nKey): string => {
         return t(key);
-    }
+    };
 
-    return { getText };
-}
+    return { getText, lang, dir };
+};
 
 export default useI18nText;

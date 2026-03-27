@@ -20,4 +20,4 @@ const HEALTH_TOPICS: HealthTopic[] = [
     },
 ];
 
-export default HEALTH_TOPICS;
+export default HEALTH_TOPICS

@@ -1,73 +1,27 @@
-# React + TypeScript + Vite
+The Compass - Hälsoassistent
+The Compass är en modern webbapplikation byggd för att underlätta hälsohantering genom smarta verktyg, noggrann dataanalys och smidig tillgång till medicinska uppgifter.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+* funktioner
+Flerspråkigt stöd: Fullt stöd för svenska och arabiska med automatisk anpassning av layout (RTL/LTR) via ett anpassat LanguageContext växlar appen sömlöst mellan (sv/ar).
+Uppläsning SpeechButton: Integrerat stöd för att lyssna på information direkt i webbläsaren via Web Speech API(Text-To-Speach).
 
-Currently, two official plugins are available:
+** Säker Autentisering: Inloggning och användarhantering via Clerk.
+Smart Validering: Avancerad logik för att säkerställa korrekta medicinska doseringar (stöd för både siffror och enheter som mg/ml).
+Modern Design: Byggd med den senaste versionen av Tailwind CSS för en responsiv och snabb användarupplevelse.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+*** Teknisk Stack
+Frontend: React 19 Utnyttjar de senaste krokarna (Hooks) och optimeringarna för ett snabbt UI.
+Build Tool: Vite 7 Fungerar som vår "Build Tool" för blixtsnabb utveckling och optimerade produktionsbyggen.
+Språk : Typescript Ger strikt typning vilket minimerar buggar och gör koden själv-dokumenterande.
+Styling: Tailwind CSS 4 Används för en nyttocentrerad (utility-first) styling som är extremt snabb att ladda och enkel att underhålla.
+Routing: React Router 7
+Autentisering: Clerk Auth Hanterar autentisering på ett säkert sätt utan att vi behöver lagra känsliga lösenord i vår egen databas.
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Varför React + TypeScript? Kombinationen ger en skalbar arkitektur där vi kan fånga fel redan under utveckling, vilket är kritiskt i en hälsoapplikation där dataintegritet är viktig.
 
-## Expanding the ESLint configuration
+Varför Context API istället för Redux? För språkhantering och användarstatus räcker Reacts inbyggda Context API. Det håller appen lättviktig och minskar komplexiteten (boilerplate).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Varför Web Speech API? Genom att använda webbläsarens inbyggda API istället för externa tjänster minskar vi latens (fördröjning), sänker kostnader och förbättrar användarens integritet.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Varför Regex för validering? Genom att använda /^\d+\s*[a-zA-Z]*$/ skapar vi en flexibel men säker inmatning som tillåter både enbart siffror och internationella måttenheter (mg, ml, g).

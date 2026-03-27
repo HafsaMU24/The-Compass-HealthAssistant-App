@@ -1,27 +1,31 @@
 import React from "react";
 import { useLanguage } from "../Context/LanguageContext";
+import { useSpeech } from "../Hooks/UseSpeech";
 
-const SpecialButton: React.FC = () => {
+interface Props {
+    text: string;
+}
 
-    const { lang } = useLanguage();
+const SpeechButton: React.FC<Props> = ({ text }) => {
+    const { t } = useLanguage();
+    const { speak, stop, speaking } = useSpeech(text);
 
     return (
-        <div className="grid grid-cols-2 gap-2 w-full">
-            <a
-                className="flex items-center justify-center rounded-xl bg-red-600 py-4 text-lg font-black text-white shadow-lg active:scale-95 transition-all hover:bg-red-700"
-                href="tel:112"
-            >
-
-                {lang === "sv" ? "RING 112" : "اتصل ١١٢"}
-            </a>
-            <a
-                className="flex items-center justify-center rounded-xl bg-blue-600 py-4 text-lg font-black text-white shadow-lg active:scale-95 transition-all hover:bg-blue-600"
-                href="tel:1177"
-            >
-                {lang === "sv" ? "RING 1177" : "اتصل ١١٧٧"}
-            </a>
-        </div>
+        <button
+            type="button"
+            onClick={speaking ? stop : speak}
+            className={`flex items-center gap-3 rounded-2xl px-5 py-3 text-sm font-bold transition-all shadow-lg active:scale-95 ${
+                speaking
+                    ? "bg-red-500 text-white animate-pulse"
+                    : "bg-blue-600 text-white hover:bg-blue-700 border border-white/20"
+            }`}
+        >
+            <span className="text-xl">{speaking ? "⏹" : "🔊"}</span>
+            <span className="tracking-wide">
+                {speaking ? t("stopReading") : t("readAloud")}
+            </span>
+        </button>
     );
 };
 
-export default SpecialButton;
+export default SpeechButton;

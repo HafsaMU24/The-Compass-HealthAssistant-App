@@ -30,17 +30,44 @@ export type QuizQuestion = {
     options: QuizOption[];
 };
 
+export type Quiz = {
+    id: string;
+    title: Record<Lang, string>;
+    questions: QuizQuestion[];
+};
+
 export type Medication = {
     id: string;
     name: string;
     dosage: string;
     time: string;
 };
+export type KidEventType = "Dentist" | "Doctor" | "Prescription" | "Chronic";
+
+export interface KidEvent {
+    id: string;
+    childName: string;
+    type: KidEventType;
+    note: string;
+    date: string;
+    parentPhone: string;
+}
+
+export interface PregnancyEvent {
+    id: string;
+    date: string;
+    time: string;
+    location: string;
+    contactPerson: string;
+    reason: string;
+    isCritical: boolean;
+    notes?: string;
+}
 
 export type ContactPerson = {
     id: string;
     name: string;
-    role: "Doctor" | "Caregiver" | "Nurse";
+    role: "Doctor" | "Caregiver" | "Companion";
     phone: string;
 };
 

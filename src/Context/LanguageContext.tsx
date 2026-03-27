@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useState, useEffect, createContext, useContext, useMemo, useCallback } from "react";
+import type { ReactNode } from "react";
 import type { Lang, Direction, I18nDict, I18nKey } from "../Types/I18n";
 import { SettingsService } from "../Services/SettingsService";
+import { useUser } from "@clerk/clerk-react";
 
 const dict: I18nDict = {
     sv: {
         appName: "The Compass",
         home: "Hem",
         health: "Hälsa",
-        assessment: "Testa symtom",
+        assessment: "Symptomkontroll",
         login: "Logga in",
         logout: "Logga ut",
-        startQuiz: "Starta quiz",
+        startQuiz: "StartQuiz",
         readAloud: "Lyssna",
         stopReading: "Stoppa",
         language: "Språk",
@@ -36,46 +38,56 @@ type LanguageState = {
     dir: Direction;
     t: (key: I18nKey) => string;
     setLang: (l: Lang) => void;
+    isSignedIn: boolean;
+    isAuthLoaded: boolean;
 };
 
-const LanguageContext = React.createContext<LanguageState | null>(null);
+const LanguageContext = createContext<LanguageState | null>(null);
 
 const dirOf = (l: Lang): Direction => (l === "ar" ? "rtl" : "ltr");
 
-export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [lang, setLangState] = React.useState<Lang>(() => SettingsService.get().language ?? "sv");
-    const dir = dirOf(lang);
+export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
-    React.useEffect(() => {
+    const [lang, setLangState] = useState<Lang>(() => SettingsService.get().language ?? "sv");
+    const dir = dirOf(lang);
+    const { isSignedIn, isLoaded } = useUser();
+
+    useEffect(() => {
         document.documentElement.dir = dir;
         document.documentElement.lang = lang;
     }, [dir, lang]);
 
-    const setLang = (l: Lang) => {
+    const setLang = useCallback((l: Lang) => {
         SettingsService.setLanguage(l);
         setLangState(l);
-    };
+    }, []);
 
+    const t = useCallback((key: I18nKey): string => {
+        return dict[lang]?.[key] || key;
+    }, [lang]);
 
-    const t = (key: I18nKey) => {
-        return dict[lang][key] || key;
-    };
+    const value = useMemo(() => ({
+        lang,
+        dir,
+        t,
+        setLang,
+        isSignedIn: !!isSignedIn,
+        isAuthLoaded: isLoaded
+    }), [lang, dir, t, setLang, isSignedIn, isLoaded]);
 
     return (
-        <LanguageContext.Provider value={{ lang, dir, t, setLang }}>
+        <LanguageContext.Provider value={value}>
             {children}
         </LanguageContext.Provider>
     );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
-export function useLanguage() {
-    const ctx = React.useContext(LanguageContext);
-
-
-    if (!ctx) {
+export const useLanguage = (): LanguageState => {
+    const context = useContext(LanguageContext);
+    if (!context) {
         throw new Error("useLanguage must be used within a LanguageProvider");
     }
+    return context;
+};
 
-    return ctx;
-}
+

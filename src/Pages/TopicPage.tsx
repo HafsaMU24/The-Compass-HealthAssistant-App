@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useLanguage } from "../Context/LanguageContext";
+import {useLanguage} from "../Context/LanguageContext";
 
 const TopicPage: React.FC = () => {
     const { slug } = useParams();

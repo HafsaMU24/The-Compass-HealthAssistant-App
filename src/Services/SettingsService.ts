@@ -1,25 +1,22 @@
-import type { Direction, Lang }  from "../Types/I18n";
-import type { UserDefaults }  from "../Types/UserDefaults";
-import StorageService from "./StorageService";
+import type{ Lang } from "../Types/I18n";
 
-const SETTINGS_KEY = "userDefaults" as const;
+const LANG_KEY = "user_language";
 
 export const SettingsService = {
-    get(): UserDefaults {
-        return StorageService.get<UserDefaults>(SETTINGS_KEY) ?? {};
+    get: () => {
+        try {
+            const language = localStorage.getItem(LANG_KEY) as Lang | null;
+            return { language: language || "sv" };
+        } catch (error) {
+            console.error("[SettingsService] Failed to get language from localStorage:", error);
+            return { language: "sv" as Lang };
+        }
     },
-
-    set(next: UserDefaults): void {
-        StorageService.set(SETTINGS_KEY, next);
-    },
-
-    setLanguage(language: Lang): void {
-        const cur = SettingsService.get();
-        SettingsService.set({ ...cur, language });
-    },
-
-    setDirection(direction: Direction): void {
-        const cur = SettingsService.get();
-        SettingsService.set({ ...cur, direction });
-    },
+    setLanguage: (lang: Lang) => {
+        try {
+            localStorage.setItem(LANG_KEY, lang);
+        } catch (error) {
+            console.error("[SettingsService] Failed to save language to localStorage:", error);
+        }
+    }
 };

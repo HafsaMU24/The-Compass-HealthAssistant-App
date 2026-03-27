@@ -1,30 +1,34 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useLanguage } from "../Context/LanguageContext";
+import { useNavigate} from "react-router-dom";
+import {useLanguage} from "../Context/LanguageContext";
 
 const HealthPage: React.FC = () => {
     const { lang } = useLanguage();
+    const navigate = useNavigate();
+
+    const cardStyle = "flex flex-col items-center justify-center gap-4 rounded-[2.5rem] p-6 backdrop-blur-md border border-white/10 shadow-lg transition-all hover:bg-white/5";
 
     return (
-        <div className="space-y-6 p-2 text-right" dir="auto">
-            <h1 className="text-3xl font-bold">{lang === "sv" ? "Min Hälsa" : "صحتي"}</h1>
+        <div className="flex flex-col gap-6 p-4 animate-in fade-in">
+            <h1 className="text-2xl font-black text-white italic uppercase">{lang === 'sv' ? "Hälsa" : "الصحة"}</h1>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-
-                <Link to="/health/medications" className="flex flex-col items-center justify-center rounded-2xl border-2 border-blue-100 bg-blue-50 p-8 shadow-sm hover:bg-blue-100 transition-all">
-                    <span className="text-5xl mb-3">💊</span>
-                    <span className="text-xl font-bold text-blue-800">{lang === "sv" ? "Mina Mediciner" : "أدويتي"}</span>
-                </Link>
-
-                <Link to="/health/care-team" className="flex flex-col items-center justify-center rounded-2xl border-2 border-emerald-100 bg-emerald-50 p-8 shadow-sm hover:bg-emerald-100 transition-all">
-                    <span className="text-5xl mb-3">🩺</span>
-                    <span className="text-xl font-bold text-emerald-800">{lang === "sv" ? "Vårdteam" : "فريق الرعاية"}</span>
-                </Link>
-            </div>
-
-            <div className="mt-10 border-t pt-6">
-                <h2 className="text-lg font-bold mb-4">{lang === "sv" ? "Hälsoinformation" : "معلومات صحية"}</h2>
-                
+            <div className="grid grid-cols-2 gap-4">
+                <div onClick={() => navigate("/health/medication")} className={`${cardStyle} bg-red-500/20`}>
+                    <span className="text-4xl">💊</span>
+                    <span className="text-[10px] font-bold text-white uppercase">{lang === 'sv' ? "Mediciner" : "الأدوية"}</span>
+                </div>
+                <div onClick={() => navigate("/health/care-team")} className={`${cardStyle} bg-emerald-500/20`}>
+                    <span className="text-4xl">🩺</span>
+                    <span className="text-[10px] font-bold text-white uppercase">{lang === 'sv' ? "Vårdteam" : "فريق الرعاية"}</span>
+                </div>
+                <div onClick={() => navigate("/health/kids")} className={`${cardStyle} bg-amber-400/20`}>
+                    <span className="text-4xl">👶</span>
+                    <span className="text-[10px] font-bold text-white uppercase">{lang === 'sv' ? "Barn" : "الأطفال"}</span>
+                </div>
+                <div onClick={() => navigate("/health/pregnancy")} className={`${cardStyle} bg-pink-500/20`}>
+                    <span className="text-4xl">🤰</span>
+                    <span className="text-[10px] font-bold text-white uppercase">{lang === 'sv' ? "Gravid" : "الحوامل"}</span>
+                </div>
             </div>
         </div>
     );

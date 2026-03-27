@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useLanguage } from "../Context/LanguageContext";
 
 interface Props {
@@ -6,49 +6,52 @@ interface Props {
 }
 
 const SpeechButton: React.FC<Props> = ({ text }) => {
-    const langContext = useLanguage();
-    const { lang, t } = langContext;
+    const { lang, t } = useLanguage();
+    const [speaking, setSpeaking] = useState<boolean>(false);
 
-    const [speaking, setSpeaking] = React.useState<boolean>(false);
-
-    const stop = React.useCallback(() => {
+    const stop = useCallback(() => {
         window.speechSynthesis.cancel();
         setSpeaking(false);
     }, []);
 
-    const speak = React.useCallback(() => {
-        if (!text || text.trim() === "") {
-            console.warn("SpeechButton: No text provided to speak.");
-            return;
-        }
+    const speak = useCallback(() => {
+        if (!text || text.trim() === "") return;
+
         stop();
-        const u = new SpeechSynthesisUtterance(text);
 
-        u.lang = lang === "ar" ? "ar-SA" : "sv-SE";
-        u.onend = () => setSpeaking(false);
-        u.onerror = () => setSpeaking(false);
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang === "ar" ? "ar-SA" : "sv-SE";
+        utterance.rate = 0.9;
 
-        setSpeaking(true);
-        window.speechSynthesis.speak(u);
+        utterance.onstart = () => setSpeaking(true);
+        utterance.onend = () => setSpeaking(false);
+        utterance.onerror = (event) => {
+            console.error("Speech Synthesis Error:", event);
+            setSpeaking(false);
+        };
+
+        window.speechSynthesis.speak(utterance);
     }, [lang, stop, text]);
 
-    React.useEffect(() => {
-        return () => stop();
-    }, [stop]);
+
+    useEffect(() => {
+        return () => {
+            window.speechSynthesis.cancel();
+        };
+    }, []);
 
     return (
         <button
             type="button"
-
-            className={`flex items-center gap-2 rounded-xl border-2 px-4 py-2 text-sm font-bold transition-all shadow-sm ${
-                speaking
-                    ? "bg-red-50 border-red-500 text-red-700"
-                    : "bg-blue-50 border-blue-500 text-blue-700 hover:bg-blue-100"
-            }`}
             onClick={speaking ? stop : speak}
+            className={`flex items-center gap-3 rounded-2xl px-5 py-3 text-sm font-bold transition-all shadow-lg active:scale-95 z-50 ${
+                speaking
+                    ? "bg-red-500 text-white animate-pulse"
+                    : "bg-blue-600 text-white hover:bg-blue-700 border border-white/20"
+            }`}
         >
-            <span className="text-lg">{speaking ? "⏹" : "🔊"}</span>
-            <span>
+            <span className="text-xl">{speaking ? "⏹" : "🔊"}</span>
+            <span className="tracking-wide">
                 {speaking ? t("stopReading") : t("readAloud")}
             </span>
         </button>

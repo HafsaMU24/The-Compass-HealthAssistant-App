@@ -1,6 +1,6 @@
-import type { QuizQuestion } from "../Types/Domain";
+import type { Quiz} from "../Types/Domain";
 
-const QUIZ = {
+const QUIZ : Quiz = {
         id: "triage-basic",
         title: {
                 sv: "Hitta rätt vårdnivå",
@@ -29,7 +29,7 @@ const QUIZ = {
                                 { id: "h2", label: { sv: "Nej / Mild", ar: "لا / خفيف" }, next: "urine-color" }, // Går vidare till urin-kollen
                         ],
                 },
-                // 1. قسم فحص البول
+
                 {
                         id: "urine-color",
                         text: {
@@ -76,7 +76,7 @@ const QUIZ = {
                                 { id: "f3", label: { sv: "Väldigt ofta (10+)", ar: "كثير جداً (+10)" }, next: "chronic-check" },
                         ],
                 },
-                // 2. قسم الأمراض المزمنة
+
                 {
                         id: "chronic-check",
                         text: {
@@ -90,7 +90,7 @@ const QUIZ = {
                                 { id: "c4", label: { sv: "Ingen av dessa", ar: "لا يوجد مما سبق" }, next: "mental-health" },
                         ],
                 },
-                // 3. قسم الصحة النفسية (الذي كان مفقوداً)
+
                 {
                         id: "mental-health",
                         text: {
@@ -103,7 +103,7 @@ const QUIZ = {
                                 { id: "m3", label: { sv: "Bra / Stabil", ar: "جيد / مستقر" }, next: "physical-symptoms" },
                         ],
                 },
-                // 4. الأعراض الجسدية
+
                 {
                         id: "physical-symptoms",
                         text: {
@@ -117,7 +117,7 @@ const QUIZ = {
                                 { id: "s4", label: { sv: "Inga av dessa", ar: "لا يوجد شيء مما سبق" }, next: "appetite-sleep" },
                         ],
                 },
-                // 5. النوم والشهية
+
                 {
                         id: "appetite-sleep",
                         text: {
@@ -129,7 +129,7 @@ const QUIZ = {
                                 { id: "as2", label: { sv: "Nej, allt är som vanligt", ar: "لا، كل شيء كالمعتاد" }, next: "medication-check" },
                         ],
                 },
-                // 6. فحص الأدوية
+
                 {
                         id: "medication-check",
                         text: {
@@ -141,7 +141,7 @@ const QUIZ = {
                                 { id: "med2", label: { sv: "Nej", ar: "لا" }, next: "q3" },
                         ],
                 },
-                // 7. السؤال الختامي
+
                 {
                         id: "q3",
                         text: {
@@ -153,7 +153,7 @@ const QUIZ = {
                                 { id: "b", label: { sv: "Nej, milda", ar: "لا، خفيفة" }, resultTag: "egen-vård" },
                         ],
                 },
-        ] satisfies QuizQuestion[],
+        ]
 };
 
 export default QUIZ;

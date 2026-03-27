@@ -1,6 +1,6 @@
 import React from "react";
 import type { HealthTopic } from "../Types/Domain";
-import { useLanguage } from "../Context/LanguageContext";
+import {useLanguage} from "../Context/LanguageContext";
 import SpeechButton from "./SpeechButton";
 
 interface Props {

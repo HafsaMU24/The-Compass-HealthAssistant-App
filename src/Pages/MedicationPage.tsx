@@ -1,144 +1,121 @@
 import React, { useState } from "react";
-import { useLanguage } from "../Context/LanguageContext";
+import {useLanguage} from "../Context/LanguageContext";
+import useMedication from "../Hooks/UseMedication.ts";
 
-interface Medication {
-    id: string;
-    name: string;
-    dosage: string;
-    time: string;
-}
 
 const MedicationPage: React.FC = () => {
     const { lang } = useLanguage();
-    const [meds, setMeds] = useState<Medication[]>([]);
-    const [name, setName] = useState("");
-    const [dosage, setDosage] = useState("");
-    const [time, setTime] = useState("");
+    const { meds, addMedication, deleteMedication } = useMedication();
+    const [form, setForm] = useState({ name: "", dosage: "", time: "" });
     const [error, setError] = useState("");
 
-    const handleSave = () => {
-        if (name.trim() === "") return;
-        const newMed: Medication = {
-            // eslint-disable-next-line react-hooks/purity
-            id: Date.now().toString(),
-            name,
-            dosage:`${dosage} mg`,
-            time
-        };
-
-        setMeds([...meds, newMed]);
-        handleCancel();
-    };
-
     const handleCancel = () => {
-        setName("");
-        setDosage("");
-        setTime("");
+        setForm({ name: "", dosage: "", time: "" });
         setError("");
+
     };
 
-    const handleDelete = (id: string) => {
-        setMeds(meds.filter(med => med.id !== id));
-    };
+    const handleSave = () => {
+        const dosageRegex = /^\d+\s*[a-zA-Z]*$/;
+        const isValid = dosageRegex.test(form.dosage);
+
+        if (form.dosage !== "" && !isValid) {
+            setError(lang === "sv" ? "Dosage måste vara siffror och m/M, g/G mg/MG eller m/M " : " الجرعة يجب أن تكون أرقاماً او ارقام و حجم الجرعة");
+            return;
+
+        }
+
+        if (!form.name.trim()) return;
+           addMedication(form.name, form.dosage, form.time);
+           handleCancel();
+
+       };
 
     return (
-        <section className="flex flex-col gap-6 p-2 animate-in fade-in duration-500">
+
+        <section className="flex flex-col gap-6 p-2 animate-in fade-in">
             <header>
                 <h1 className="text-2xl font-black text-white italic uppercase tracking-tighter">
                     {lang === "sv" ? "Mina Mediciner" : "أدويتي"}
                 </h1>
             </header>
 
-            <div className="rounded-[2rem] border border-white/10 bg-white/20 p-6 backdrop-blur-xl shadow-2xl">
-                <div className="space-y-4">
+            <div className="bg-white/10 p-6 rounded-[2rem] border border-white/10 space-y-4 backdrop-blur-md">
+                <input
+                    className="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-blue-500 transition-all"
+                    placeholder={lang === "sv" ? "Namn" : "الاسم"}
+                    value={form.name}
+                    onChange={e => setForm({...form, name: e.target.value})}
+
+                />
+
+                <div className="space-y-1">
                     <input
-                        type="text"
-                        className="w-full rounded-xl border border-white/10 bg-sky-50 p-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 transition-all"
-                        placeholder={lang === "sv" ? "Läkemedlets namn" : "اسم الدواء"}
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        className={`w-full p-4 rounded-xl bg-white/5 border ${error ? 'border-red-500' : 'border-white/10'} text-white outline-none focus:border-blue-500 transition-all`}
+                        placeholder={lang === "sv" ? "Dosage" : "الجرعة"}
+                        value={form.dosage}
+                        onChange={e => {
+                            setForm({...form, dosage: e.target.value});
+                            if (error) setError("");
+                        }}
                     />
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-1">
-                        <input
-                            type="text"
-                            inputMode="decimal"
-                            className={`w-full rounded-xl border border-white/10 bg-sky-50 p-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 $ {
-                            error ? "border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.2)]" : "border-white/10 focus:border-blue-500" }`}
+                    {error && <p className="text-red-500 text-[10px] font-bold px-2 animate-pulse">{error}</p>}
 
-                            placeholder={lang === "sv" ? "Dos (mg)" : "(ملغ)الجرعة"}
-                            value={dosage}
-                            onChange={(e) => {
-                                const val = e.target.value;
-                                if (/^[0-9.]*$/.test(val)) {
-                                    setDosage(val);
-                                    setError("");
-                                } else {
-                                    setError(lang === "sv" ? "Använd endast siffror" : "يجب استخدام الأرقام فقط");
-                                    setTimeout(() => setError(""), 2500);
-                                }
-                            }}
-                        />
-                            {error && (
-                                <span className="text-[9px] text-red-400 font-bold px-2 animate-pulse uppercase tracking-wider">
-                                    {error}
-                                </span>
-                            )}
-                        </div>
-
-                        <input
-                            type="time"
-                            className="w-full rounded-xl border border-white/10 bg-sky-50 p-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
-                            value={time}
-                            onChange={(e) => setTime(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="flex gap-3 pt-2">
-                        <button
-                            onClick={handleCancel}
-                            className="flex-1 rounded-xl bg-white/5 border border-white/10 py-3 text-sm font-bold text-white hover:bg-white/10 transition-all active:scale-95"
-                        >
-                            {lang === "sv" ? "Avbryt" : "إلغاء"}
-                        </button>
-                        <button
-                            onClick={handleSave}
-                            className="flex-[2] rounded-xl bg-blue-600 py-3 text-sm font-bold text-white hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition-all active:scale-95"
-                        >
-                            {lang === "sv" ? "Spara" : "حفظ"}
-                        </button>
-                    </div>
                 </div>
+
+                <input
+                    type="time"
+                    className="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white outline-none"
+                    value={form.time}
+                    onChange={e => setForm({...form, time: e.target.value})}
+
+                />
+
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                    <button onClick={handleCancel} className="bg-white/5 py-4 rounded-xl text-white/40 font-black text-xs uppercase hover:bg-white/10 transition-all">
+                        {lang === "sv" ? "Avbryt" : "إلغاء"}
+                    </button>
+
+                    <button onClick={handleSave} className="bg-blue-600 py-4 rounded-xl text-white font-black text-xs uppercase shadow-lg shadow-blue-600/20 active:scale-95 transition-all">
+                        {lang === "sv" ? "Spara" : "حفظ"}
+                    </button>
+
+                </div>
+
             </div>
 
 
             <div className="space-y-3">
-                <h2 className="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] px-2">
-                    {lang === "sv" ? "Aktiva mediciner" : "الأدوية الحالية"}
-                </h2>
-                {meds.length === 0 ? (
-                    <p className="text-white/30 text-xs text-center py-4 italic">
-                        {lang === "sv" ? "Inga mediciner tillagda" : "لا توجد أدوية مضافة"}
-                    </p>
-                ) : (
-                    meds.map(med => (
-                        <div key={med.id} className="flex items-center justify-between rounded-2xl border border-white/5 bg-white/5 p-4 backdrop-blur-md">
+                {(meds || []).map(med => (
+                    <div key={med.id} className="flex justify-between items-center bg-white/5 p-4 rounded-2xl border border-white/5 backdrop-blur-sm">
+                        <div className="flex items-center gap-4">
+                            <div className="h-10 w-10 rounded-full bg-red-500/20 flex items-center justify-center text-lg">💊</div>
+
                             <div>
-                                <div className="font-bold text-white">{med.name}</div>
-                                <div className="text-xs text-white/50">{med.dosage} • {med.time}</div>
+                                <div className="text-white font-bold">{med.name}</div>
+                                <div className="text-[10px] text-white/40 uppercase font-black tracking-widest">
+                                    {med.dosage} mg {med.time && `• ${med.time}`}
+                                </div>
+
                             </div>
-                            <button
-                                onClick={() => handleDelete(med.id)}
-                                className="text-red-400 text-xs font-bold hover:text-red-300 p-2"
-                            >
-                                {lang === "sv" ? "Ta bort" : "حذف"}
-                            </button>
+
                         </div>
-                    ))
-                )}
+
+                        <button onClick={() => deleteMedication(med.id)} className="text-red-400 text-[10px] font-black uppercase px-3 py-2 hover:bg-red-500/10 rounded-lg transition-all">
+                            {lang === "sv" ? "Radera" : "حذف"}
+
+                        </button>
+
+                    </div>
+
+                ))}
+
             </div>
+
         </section>
     );
+
 };
+
 
 export default MedicationPage;

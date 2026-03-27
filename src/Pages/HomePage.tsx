@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLanguage } from "../Context/LanguageContext";
+import {useLanguage} from "../Context/LanguageContext";
 
 const HomePage: React.FC = () => {
     const { t, lang } = useLanguage();
@@ -87,7 +87,7 @@ const HomePage: React.FC = () => {
                     </div>
                 )}
             </div>
-            {/* --- SLUT PÅ NY SEKTION --- */}
+
 
         </div>
     );
