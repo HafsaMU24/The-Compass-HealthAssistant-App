@@ -17,11 +17,13 @@ Styling: Tailwind CSS 4 Används för en nyttocentrerad (utility-first) styling 
 Routing: React Router 7
 Autentisering: Clerk Auth Hanterar autentisering på ett säkert sätt utan att vi behöver lagra känsliga lösenord i vår egen databas.
 
+-Varför React + TypeScript? Kombinationen ger en skalbar arkitektur där vi kan fånga fel redan under utveckling, vilket är kritiskt i en hälsoapplikation där dataintegritet är viktig.
+-Varför Context API istället för Redux? För språkhantering och användarstatus räcker Reacts inbyggda Context API. Det håller appen lättviktig och minskar komplexiteten (boilerplate).
+-Varför Web Speech API? Genom att använda webbläsarens inbyggda API istället för externa tjänster minskar vi latens (fördröjning), sänker kostnader och förbättrar användarens integritet.
+-Varför Regex för validering? Genom att använda /^\d+\s*[a-zA-Z]*$/ skapar vi en flexibel men säker inmatning som tillåter både enbart siffror och internationella måttenheter (mg, ml, g).
 
-Varför React + TypeScript? Kombinationen ger en skalbar arkitektur där vi kan fånga fel redan under utveckling, vilket är kritiskt i en hälsoapplikation där dataintegritet är viktig.
-
-Varför Context API istället för Redux? För språkhantering och användarstatus räcker Reacts inbyggda Context API. Det håller appen lättviktig och minskar komplexiteten (boilerplate).
-
-Varför Web Speech API? Genom att använda webbläsarens inbyggda API istället för externa tjänster minskar vi latens (fördröjning), sänker kostnader och förbättrar användarens integritet.
-
-Varför Regex för validering? Genom att använda /^\d+\s*[a-zA-Z]*$/ skapar vi en flexibel men säker inmatning som tillåter både enbart siffror och internationella måttenheter (mg, ml, g).
+Ändring som jag gjört:
+Rensning: Tog bort oanvända filer och mallar.
+Nya filer: Lade till nödvändiga komponenter och resurser.
+Refaktorering: Justerade kod och stil för att färdigställa appens utseende.
+Dokumentation: Skrev en fullständig README.
